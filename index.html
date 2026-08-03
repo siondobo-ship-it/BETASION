@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katekisasi - Jemaat GKPII Sion Dobo</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1b365d;
+            --accent-color: #d4af37;
+            --admin-color: #2c1a4d;
+            --bg-color: #f4f6f9;
+            --sidebar-width: 270px;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --white: #ffffff;
+            --success: #2e7d32;
+            --danger: #c62828;
+            --warning: #ef6c00;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+        }
+
+        /* ==================== LOGIN CONTAINER ==================== */
+        #loginScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), #0d1b2a);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--white);
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .login-header i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .login-header h2 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .login-header p {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            margin-bottom: 25px;
+        }
+
+        .forgot-pass-link {
+            display: block;
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-top: -5px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        /* ==================== DASHBOARD LAYOUT ==================== */
+        #appScreen {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary-color);
+            color: var(--white);
+            position: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: 0.3s;
+        }
+
+        .sidebar.admin-mode {
+            background-color: var(--admin-color);
+        }
+
+        .brand {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand i {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        .brand h2 { font-size: 0.88rem; font-weight: 700; letter-spacing: 0.5px; line-height: 1.3; }
+        .brand p { font-size: 0.68rem; opacity: 0.85; margin-top: 3px; font-weight: 400; }
+
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-top: 8px;
+            text-transform: uppercase;
+        }
+
+        .badge-siswa { background-color: var(--accent-color); color: var(--primary-color); }
+        .badge-admin { background-color: #ab47bc; color: var(--white); }
+
+        .menu {
+            list-style: none;
+            padding: 15px 0;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.88rem;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--accent-color);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .menu-item i {
+            margin-right: 12px;
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .role-siswa-only, .role-admin-only { display: none; }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 30px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background-color: rgba(27, 54, 93, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-info h3 { font-size: 1.4rem; color: var(--text-dark); }
+        .card-info p { font-size: 0.85rem; color: var(--text-light); }
+
+        .content-box {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+
+        .content-box h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; color: var(--text-dark); font-weight: 500; font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-block { width: 100%; }
+        .btn-accent { background-color: var(--accent-color); color: var(--primary-color); font-weight: 600; }
+        .btn-success { background-color: var(--success); color: white; }
+        .btn-danger { background-color: var(--danger); color: white; }
+        .btn-warning { background-color: var(--warning); color: white; }
+
+        .checkbox-box {
+            background: #f8f9fa;
+            border: 2px dashed #1b365d;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-box label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 0.9rem; }
+        th { background-color: var(--bg-color); color: var(--primary-color); }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .bg-pending { background-color: #fff3e0; color: var(--warning); }
+        .bg-done { background-color: #e8f5e9; color: var(--success); }
+        .bg-danger { background-color: #ffebee; color: var(--danger); }
+
+        .media-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+        .modal-content.wide { max-width: 800px; }
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 1.2rem; cursor: pointer; color: #888;
+        }
+
+        /* STYLE SERTIFIKAT PREVIEW */
+        #certCanvas {
+            width: 100%;
+            height: auto;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 70px; }
+            .brand h2, .brand p, .role-badge, .menu-item span { display: none; }
+            .main-content { margin-left: 70px; }
+            .form-row { flex-direction: column; gap: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== LOGIN ==================== -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fa-solid fa-church"></i>
+                <h2 class="display-church-name">JEMAAT GKPII SION DOBO</h2>
+                <p class="display-church-sub">PENDIDIKAN FORMAL GEREJA (KATEKISASI)</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-user"></i> Username</label>
+                    <input type="text" id="loginUser" placeholder="Masukkan Username Anda" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-lock"></i> Password</label>
+                    <input type="password" id="loginPass" placeholder="Masukkan Password" required>
+                </div>
+
+                <a class="forgot-pass-link" onclick="openResetModal()">Lupa Password?</a>
+
+                <button type="submit" class="btn btn-accent btn-block"><i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== DASHBOARD UTAMA ==================== -->
+    <div id="appScreen">
+        <!-- SIDEBAR -->
+        <div class="sidebar" id="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-church"></i>
+                <h2 class="display-church-name">JEMAAT GKPII SION DOBO</h2>
+                <p class="display-church-sub">PENDIDIKAN FORMAL GEREJA (KATEKISASI)</p>
+                <span id="roleBadge" class="role-badge badge-siswa">Siswa</span>
+            </div>
+
+            <ul class="menu">
+                <li class="menu-item active" onclick="showSection('dashboard', this)">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </li>
+
+                <!-- MENU SISWA -->
+                <li class="menu-item role-siswa-only" onclick="showSection('materi-siswa', this)">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Materi Pelajaran</span>
+                </li>
+                <li class="menu-item role-siswa-only" onclick="showSection('absen-siswa', this)">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>Form Presensi Hari Ini</span>
+                </li>
+                <li class="menu-item role-siswa-only" onclick="showSection('evaluasi-siswa', this)">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Tugas & Evaluasi Saya</span>
+                </li>
+                <li class="menu-item role-siswa-only" onclick="showSection('sertifikat-siswa', this)">
+                    <i class="fa-solid fa-award"></i>
+                    <span>Sertifikat</span>
+                </li>
+
+                <!-- MENU ADMIN / PENGAJAR -->
+                <li class="menu-item role-admin-only" onclick="showSection('kelola-materi', this)">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                    <span>Kelola Materi</span>
+                </li>
+                <li class="menu-item role-admin-only" onclick="showSection('rekap-absen', this)">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <span>Buka Sesi & Rekap Absen</span>
+                </li>
+                <li class="menu-item role-admin-only" onclick="showSection('kelola-tugas', this)">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>Kelola Tugas Minggu Ini</span>
+                </li>
+                <li class="menu-item role-admin-only" onclick="showSection('rekap-nilai-admin', this)">
+                    <i class="fa-solid fa-square-poll-vertical"></i>
+                    <span>Rekap Seluruh Nilai</span>
+                </li>
+                <li class="menu-item role-admin-only" onclick="showSection('kelola-siswa', this)">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span>Kelola Akun Siswa</span>
+                </li>
+                <li class="menu-item role-admin-only" onclick="showSection('pengaturan-admin', this)">
+                    <i class="fa-solid fa-gears"></i>
+                    <span>Pengaturan App & Profil</span>
+                </li>
+
+                <!-- MENU BERSAMA -->
+                <li class="menu-item" onclick="showSection('jadwal', this)">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Jadwal Kegiatan</span>
+                </li>
+                <li class="menu-item" onclick="showSection('ganti-password', this)">
+                    <i class="fa-solid fa-key"></i>
+                    <span>Ganti Password</span>
+                </li>
+                <li class="menu-item" onclick="handleLogout()" style="margin-top: auto; background-color: rgba(255,0,0,0.1);">
+                    <i class="fa-solid fa-right-from-bracket" style="color: #ff6b6b;"></i>
+                    <span style="color: #ff6b6b;">Keluar / Logout</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="main-content">
+            <header>
+                <div>
+                    <h2 id="headerTitle">Portal Katekisasi</h2>
+                    <p id="headerSubTitle" style="font-size: 0.8rem; color: var(--text-light);">Jemaat GKPII Sion Dobo</p>
+                </div>
+
+                <div class="user-profile">
+                    <div class="avatar" id="userAvatar">S</div>
+                    <div>
+                        <strong id="userName">Peserta Katekisasi</strong>
+                        <p id="userSub" style="font-size: 0.75rem; color: gray;">Siswa Active</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 1. DASHBOARD -->
+            <div id="dashboard" class="section active">
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-icon"><i class="fa-solid fa-users"></i></div>
+                        <div class="card-info">
+                            <h3 id="statPeserta">0</h3>
+                            <p>Total Siswa Terdaftar</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fa-solid fa-door-open"></i></div>
+                        <div class="card-info">
+                            <h3 id="statAbsenStatus" style="font-size: 1rem; color: var(--success);">TERBUKA</h3>
+                            <p>Sesi Absensi Minggu Ini</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-bullhorn"></i> Pengumuman Terbaru</h3>
+                    <p id="displayAnnouncement"><strong>Penting:</strong> Seluruh peserta Pendidikan Formal Gereja (Katekisasi) Jemaat GKPII Sion Dobo diharapkan hadir tepat waktu dalam kelas tatap muka hari Minggu ini pukul 16.00 WIT di Gedung Gereja Sion Dobo.</p>
+                </div>
+            </div>
+
+            <!-- 2. FITUR SISWA: MATERI -->
+            <div id="materi-siswa" class="section">
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-book-bible"></i> Modul Pelajaran Katekisasi</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Judul Materi</th>
+                                <th>Pengajar</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentMateriTable">
+                            <!-- Kosong di awal, diisi secara realtime oleh Admin -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FITUR SISWA: FORM PRESENSI -->
+            <div id="absen-siswa" class="section">
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-clipboard-user"></i> Presensi Kehadiran Siswa</h3>
+                    
+                    <div id="absenContainerOpen">
+                        <p style="margin-bottom: 15px; font-size: 0.9rem; color: #555;">Sesi pertemuan minggu berjalan sedang dibuka oleh Pengajar. Silahkan centang konfirmasi kehadiran Anda dibawah ini:</p>
+                        
+                        <div style="background: #eef2f7; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p><strong>Nama Siswa:</strong> <span id="absenStudentName">-</span></p>
+                            <p><strong>Pos Pelayanan:</strong> <span id="absenStudentPos">-</span></p>
+                            <p><strong>Sesi Pertemuan:</strong> <span id="absenActiveSessionTitle">Minggu Ke-1</span></p>
+                        </div>
+
+                        <form onsubmit="handleStudentAbsenSubmit(event)">
+                            <div class="checkbox-box">
+                                <label>
+                                    <input type="checkbox" id="checkHadir" required>
+                                    <span>Saya Hadir Mengikuti Katekisasi Sesi Ini</span>
+                                </label>
+                            </div>
+
+                            <button type="submit" id="btnSubmitAbsen" class="btn btn-success btn-block" style="font-size: 1rem; padding: 12px;"><i class="fa-solid fa-circle-check"></i> Kirim Presensi Kehadiran</button>
+                        </form>
+                    </div>
+
+                    <div id="absenContainerClosed" style="display: none; text-align: center; padding: 30px;">
+                        <i class="fa-solid fa-lock" style="font-size: 3rem; color: #aaa; margin-bottom: 10px;"></i>
+                        <h4 style="color: var(--danger);">Room Absensi Belum Dibuka</h4>
+                        <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">Sesi absensi untuk minggu berjalan belum dibuka oleh Pengajar/Admin.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FITUR SISWA: EVALUASI & TUGAS -->
+            <div id="evaluasi-siswa" class="section">
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-list-check"></i> Daftar Tugas & Status Pengerjaan Saya</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Judul Tugas</th>
+                                <th>Deskripsi / Instruksi</th>
+                                <th>Batas Waktu</th>
+                                <th>Status Pengerjaan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTaskListTable"></tbody>
+                    </table>
+                </div>
+
+                <div class="content-box" id="studentSubmitFormBox" style="display:none;">
+                    <h3><i class="fa-solid fa-pen-to-square"></i> Form Kirim Jawaban Tugas</h3>
+                    <form onsubmit="handleStudentTaskSubmit(event)">
+                        <input type="hidden" id="studentSelectedTaskId">
+                        
+                        <div style="background: #eef2f7; padding: 12px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid var(--primary-color);">
+                            <strong style="color: var(--primary-color);" id="studentTaskFormTitle">-</strong>
+                            <p id="studentTaskFormDesc" style="font-size: 0.85rem; color: #444; margin-top: 4px;"></p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Jawaban Teks / Catatan Hasil Kerja:</label>
+                            <textarea id="taskAnswerText" rows="3" placeholder="Tuliskan jawaban atau keterangan tugas Anda di sini..."></textarea>
+                        </div>
+
+                        <!-- OPSI UPLOAD MEDIA TUGAS -->
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-paperclip"></i> Jenis Lampiran Tugas (Gambar / Video / File):</label>
+                            <select id="taskMediaType" onchange="toggleMediaTypeInput(this.value)">
+                                <option value="none">Teks Saja (Tanpa File/Video)</option>
+                                <option value="url">Tautan / Link Video (Google Drive / YouTube) [TIDAK MAKAN KAPASITAS]</option>
+                                <option value="file">Upload File / Gambar / Video (Penyimpanan Cloud Storage)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="mediaUrlGroup" style="display:none;">
+                            <label><i class="fa-solid fa-link"></i> Link/URL Video atau Gambar (Drive / Youtube):</label>
+                            <input type="url" id="taskMediaUrl" placeholder="Contoh: https://drive.google.com/file/d/... atau https://youtu.be/...">
+                            <small style="color: #666; font-size: 0.75rem;">Gunakan link Google Drive / YouTube agar tidak membebani batas ruang penyimpanan.</small>
+                        </div>
+
+                        <div class="form-group" id="mediaFileGroup" style="display:none;">
+                            <label><i class="fa-solid fa-file-arrow-up"></i> Pilih File / Video / Gambar:</label>
+                            <input type="file" id="taskMediaFile" accept="image/*,video/*,.pdf">
+                        </div>
+
+                        <button type="submit" id="btnSubmitTask" class="btn btn-success"><i class="fa-solid fa-paper-plane"></i> Kirim Jawaban Sekarang</button>
+                    </form>
+                </div>
+
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-square-poll-vertical"></i> Hasil Nilai & Catatan Evaluasi Saya</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tugas / Evaluasi</th>
+                                <th>Tanggal Kirim</th>
+                                <th>Lampiran</th>
+                                <th>Nilai</th>
+                                <th>Catatan Pengajar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentGradesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FITUR SISWA: SERTIFIKAT -->
+            <div id="sertifikat-siswa" class="section">
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-award"></i> Sertifikat</h3>
+                    <p style="font-size: 0.9rem; color: #555; margin-bottom: 20px;">
+                        Sertifikat diterbitkan secara otomatis oleh sistem apabila **Nilai Rata-rata Evaluasi** Anda berada **di atas 70 (Score &ge; 70)**.
+                    </p>
+
+                    <div id="certStatusContainer" style="background: #eef2f7; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
+                        <!-- Status Sertifikat diisi via JS -->
+                    </div>
+
+                    <div id="certActionBox" style="display: none; text-align: center;">
+                        <button class="btn btn-accent" style="font-size: 1rem; padding: 12px 25px;" onclick="generateAndPreviewCertificate()">
+                            <i class="fa-solid fa-graduation-cap"></i> Lihat & Unduh Sertifikat
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. FITUR ADMIN: KELOLA MATERI -->
+            <div id="kelola-materi" class="section">
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-upload"></i> Unggah Materi Baru</h3>
+                    <form onsubmit="handleUploadMateri(event)">
+                        <div class="form-group">
+                            <label>Judul Modul Materi:</label>
+                            <input type="text" id="materiTitle" placeholder="Contoh: Doktrin Keselamatan" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Pilih File (PDF/Doc) Untuk Diunggah ke Cloud Storage:</label>
+                            <input type="file" id="materiFile">
+                        </div>
+                        <div class="form-group">
+                            <label>Atau Tautan File (Bisa Menggunakan Link Google Drive):</label>
+                            <input type="url" id="materiUrl" placeholder="https://drive.google.com/file/d/...">
+                        </div>
+                        <button type="submit" id="btnUploadMateri" class="btn btn-success"><i class="fa-solid fa-cloud-arrow-up"></i> Publikasikan Materi</button>
+                    </form>
+                </div>
+
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-book-open"></i> Daftar Materi Terpublikasi</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Judul Materi</th>
+                                <th>Pengajar</th>
+                                <th>Aksi Admin</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminMateriTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FITUR ADMIN: BUKA ROOM ABSEN -->
+            <div id="rekap-absen" class="section">
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-door-open"></i> Kontrol Sesi Absensi Siswa (Minggu Berjalan)</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nama Sesi / Minggu Pertemuan:</label>
+                            <input type="text" id="sessionTitleInput" value="Pertemuan Minggu Ke-1">
+                        </div>
+                        <div class="form-group">
+                            <label>Status Room Absen Siswa:</label>
+                            <select id="sessionStatusSelect" onchange="toggleAbsenceRoom(this.value)">
+                                <option value="open">Buka Room Absen (Siswa BISA Isi)</option>
+                                <option value="closed">Tutup Room Absen (Siswa TIDAK BISA Isi)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-clipboard-list"></i> Rekap Presensi Siswa Terkini</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nama Peserta</th>
+                                <th>Pos Pelayanan</th>
+                                <th>Sesi Pertemuan</th>
+                                <th>Waktu Presensi (Realtime)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceRecordTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FITUR ADMIN: KELOLA TUGAS -->
+            <div id="kelola-tugas" class="section">
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-plus"></i> Terbitkan Tugas Baru Minggu Ini</h3>
+                    <form onsubmit="handleCreateTask(event)">
+                        <div class="form-group">
+                            <label>Judul Tugas / Evaluasi Mingguan:</label>
+                            <input type="text" id="taskTitle" placeholder="Contoh: Tugas Minggu 1: Rangkuman Doktrin" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Deskripsi / Soal / Instruksi:</label>
+                            <textarea id="taskDesc" rows="3" placeholder="Tulis instruksi atau soal evaluasi minggu ini..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-clock"></i> Batas Waktu Pengumpulan (Deadline):</label>
+                            <input type="datetime-local" id="taskDeadline" required>
+                        </div>
+                        <button type="submit" class="btn btn-success"><i class="fa-solid fa-paper-plane"></i> Terbitkan Tugas Sekarang</button>
+                    </form>
+                </div>
+
+                <!-- DAFTAR TUGAS YANG DITERBITKAN (ADMIN HAPUS & LIHAT) -->
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-list-check"></i> Daftar Seluruh Tugas Diberikan</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Judul Tugas</th>
+                                <th>Instruksi</th>
+                                <th>Batas Waktu</th>
+                                <th>Tanggal Dibuat</th>
+                                <th>Aksi Admin</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTaskListTable"></tbody>
+                    </table>
+                </div>
+
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-hourglass-half"></i> Jawaban Siswa Perlu Dinilai</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Siswa</th>
+                                <th>Judul Tugas</th>
+                                <th>Jawaban / Lampiran Teks & Media</th>
+                                <th>Waktu Kirim</th>
+                                <th>Aksi Penilaian</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminPendingSubmissionTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FITUR ADMIN: REKAP NILAI -->
+            <div id="rekap-nilai-admin" class="section">
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-square-poll-vertical"></i> Rekap Seluruh Nilai Evaluasi Siswa</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nama Siswa</th>
+                                <th>Judul Tugas</th>
+                                <th>Tanggal Kirim</th>
+                                <th>Nilai</th>
+                                <th>Catatan Pengajar</th>
+                                <th>Aksi Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminAllGradesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FITUR ADMIN: TAMBAH & HAPUS SISWA -->
+            <div id="kelola-siswa" class="section">
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-user-plus"></i> Tambah Akun Siswa Baru</h3>
+                    <form onsubmit="handleAddStudent(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nama Lengkap Siswa:</label>
+                                <input type="text" id="addName" placeholder="Contoh: Samuel Dobo" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Terdaftar:</label>
+                                <input type="email" id="addEmail" placeholder="samuel@gmail.com" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Pos Pelayanan:</label>
+                                <input type="text" id="addPos" placeholder="Contoh: Pos Pelayanan 1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Username Akun:</label>
+                                <input type="text" id="addUsername" placeholder="Username untuk login" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password Awal:</label>
+                                <input type="password" id="addPassword" placeholder="Password siswa" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success"><i class="fa-solid fa-plus"></i> Tambahkan Siswa</button>
+                    </form>
+                </div>
+
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-users-gear"></i> Daftar & Kelola Akun Siswa</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nama Siswa</th>
+                                <th>Pos Pelayanan</th>
+                                <th>Email</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Aksi Admin</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentAccountTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FITUR ADMIN: PENGATURAN -->
+            <div id="pengaturan-admin" class="section">
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-id-card"></i> Pengaturan Identitas Pengajar & Tampilan Dashboard</h3>
+                    <form onsubmit="handleSaveSettings(event)">
+                        <h4 style="margin-bottom: 12px; color: var(--primary-color);">1. Identitas Pengajar / Admin</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nama Pengajar / Pendeta:</label>
+                                <input type="text" id="settingTeacherName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Jabatan / Peran Admin:</label>
+                                <input type="text" id="settingTeacherRole" required>
+                            </div>
+                        </div>
+
+                        <h4 style="margin-top: 15px; margin-bottom: 12px; color: var(--primary-color);">2. Tampilan Header & Dashboard</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nama Jemaat / Gereja:</label>
+                                <input type="text" id="settingChurchName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Sub Judul / Program:</label>
+                                <input type="text" id="settingChurchSub" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Isi Teks Pengumuman Dashboard:</label>
+                            <textarea id="settingAnnouncement" rows="4" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Simpan Seluruh Pengaturan</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- FITUR JADWAL KEGIATAN -->
+            <div id="jadwal" class="section">
+                <div class="content-box role-admin-only">
+                    <h3><i class="fa-solid fa-calendar-plus"></i> Tambah Jadwal Kegiatan Baru</h3>
+                    <form onsubmit="handleAddSchedule(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Hari / Tanggal Pelaksanaan:</label>
+                                <input type="text" id="schDate" placeholder="Contoh: Minggu, 12 November 2026" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Waktu / Jam (WIT):</label>
+                                <input type="text" id="schTime" placeholder="Contoh: 16.00 - 18.00 WIT" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nama Kegiatan / Topik Kelas:</label>
+                                <input type="text" id="schTitle" placeholder="Contoh: Pertemuan Katekisasi Ke-2" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Tempat / Lokasi Kegiatan:</label>
+                                <input type="text" id="schLocation" placeholder="Contoh: Gedung Gereja Sion Dobo" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success"><i class="fa-solid fa-plus"></i> Tambahkan Ke Jadwal</button>
+                    </form>
+                </div>
+
+                <div class="content-box">
+                    <h3><i class="fa-solid fa-clock"></i> Agenda & Jadwal Kegiatan Katekisasi</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Hari / Tanggal</th>
+                                <th>Waktu (WIT)</th>
+                                <th>Kegiatan / Pokok Bahasan</th>
+                                <th>Lokasi / Tempat</th>
+                                <th class="role-admin-only">Aksi Admin</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GANTI PASSWORD -->
+            <div id="ganti-password" class="section">
+                <div class="content-box" style="max-width: 500px;">
+                    <h3><i class="fa-solid fa-key"></i> Ubah Password Saya</h3>
+                    <form id="changePasswordForm" onsubmit="handleChangePassword(event)">
+                        <div class="form-group">
+                            <label>Password Lama:</label>
+                            <input type="password" id="oldPassword" placeholder="Masukkan password lama" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password Baru:</label>
+                            <input type="password" id="newPassword" placeholder="Masukkan password baru" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Konfirmasi Password Baru:</label>
+                            <input type="password" id="confirmNewPassword" placeholder="Ulangi password baru" required>
+                        </div>
+                        <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Simpan Password Baru</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL LUPA PASSWORD -->
+    <div id="resetModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeResetModal()">&times;</span>
+            <h3 style="color: var(--primary-color); margin-bottom: 10px;"><i class="fa-solid fa-unlock-keyhole"></i> Lupa Password Akun</h3>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 20px;">Pilih opsi pemulihan kata sandi akun katekisasi Anda:</p>
+
+            <div style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
+                <h4 style="font-size: 0.9rem; margin-bottom: 8px;">Opsi 1: Reset via Email Terdaftar</h4>
+                <form onsubmit="handleResetViaEmail(event)">
+                    <div class="form-group">
+                        <input type="email" id="resetEmailInput" placeholder="Masukkan Email Anda" required>
+                    </div>
+                    <button type="submit" class="btn btn-accent btn-block" style="font-size: 0.8rem;">Kirim Tautan Reset Ke Email</button>
+                </form>
+            </div>
+
+            <div>
+                <h4 style="font-size: 0.9rem; margin-bottom: 8px;">Opsi 2: Bantuan Admin / Pengajar</h4>
+                <a href="https://wa.me/6281234567890?text=Halo%20Admin%20Katekisasi%20GKPII%20Sion%20Dobo,%20saya%20lupa%20password%20akun%20saya." target="_blank" class="btn btn-success btn-block" style="text-decoration: none; text-align: center; display: block; font-size: 0.8rem;">
+                    <i class="fa-brands fa-whatsapp"></i> Hubungi Admin via WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PREVIEW SERTIFIKAT OTOMATIS -->
+    <div id="certModal" class="modal-overlay">
+        <div class="modal-content wide">
+            <span class="close-modal" onclick="closeCertModal()">&times;</span>
+            <h3 style="color: var(--primary-color); margin-bottom: 15px; text-align: center;">
+                <i class="fa-solid fa-certificate" style="color: var(--accent-color);"></i> Sertifikat Pencapaian Pembelajaran
+            </h3>
+
+            <div style="text-align: center; margin-bottom: 20px;">
+                <canvas id="certCanvas" width="800" height="550"></canvas>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a id="downloadCertBtn" class="btn btn-success" download="Sertifikat_Katekisasi.png">
+                    <i class="fa-solid fa-download"></i> Unduh File Sertifikat (PNG)
+                </a>
+                <button class="btn btn-danger" onclick="closeCertModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== FIREBASE CLOUD DATABASE & STORAGE SDK ==================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, setDoc, getDoc 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import {
+            getStorage, ref, uploadBytes, getDownloadURL
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+        // CONFIG FIREBASE CLOUD SESUAI DENGAN credentials
+        const firebaseConfig = {
+            apiKey: "AIzaSyC584Ng4KuBOhxIXYJTBGDp5EfoxpnfY-A",
+            authDomain: "sipfg-tahun2026.firebaseapp.com",
+            databaseURL: "https://sipfg-tahun2026-default-rtdb.firebaseio.com",
+            projectId: "sipfg-tahun2026",
+            storageBucket: "sipfg-tahun2026.firebasestorage.app",
+            messagingSenderId: "692377580095",
+            appId: "1:692377580095:web:824b5b777dbead8c237e8a",
+            measurementId: "G-PMRMCB2EJ4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // DATA STATE CLOUD IN-MEMORY
+        let cloudData = {
+            settings: {
+                teacherName: 'Pdt. Lendris Lekatompessy, S.Th',
+                teacherRole: 'Pengajar Katekisasi',
+                churchName: 'JEMAAT GKPII SION DOBO',
+                churchSub: 'PENDIDIKAN FORMAL GEREJA (KATEKISASI)',
+                announcement: 'Penting: Seluruh peserta Pendidikan Formal Gereja (Katekisasi) Jemaat GKPII Sion Dobo diharapkan hadir tepat waktu dalam kelas tatap muka hari Minggu setelah Ibadah Minggu Selesai di Gedung Gereja Sion Dobo.'
+            },
+            users: [],
+            schedules: [],
+            absenRoom: { status: 'open', sessionTitle: 'Pertemuan Minggu Ke-1' },
+            absenLogs: [],
+            materi: [],
+            tasks: [],
+            submissions: []
+        };
+
+        let currentUser = null;
+
+        // REALTIME LISTENER DARI CLOUD DATABASE
+        function initCloudListeners() {
+            // 1. Listen Settings
+            onSnapshot(doc(db, "app_data", "settings"), (docSnap) => {
+                if (docSnap.exists()) {
+                    cloudData.settings = docSnap.data();
+                } else {
+                    setDoc(doc(db, "app_data", "settings"), cloudData.settings);
+                }
+                applySystemSettings();
+            });
+
+            // 2. Listen Users
+            onSnapshot(collection(db, "users"), (snapshot) => {
+                cloudData.users = snapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
+                
+                if(cloudData.users.length === 0) {
+                    addDoc(collection(db, "users"), { id: 1, role: 'siswa', name: 'Yohanes Arafura', username: 'siswa', password: 'siswa123', email: 'yohanes@gmail.com', posPelayanan: 'Pos Pelayanan 1' });
+                    addDoc(collection(db, "users"), { id: 3, role: 'admin', name: 'Pdt. Lendris Lekatompessy, S.Th', username: 'admin', password: 'admin123', email: 'admin.siondobo@gkpii.or.id', posPelayanan: 'Pengajar' });
+                }
+
+                document.getElementById('statPeserta').innerText = cloudData.users.filter(u => u.role === 'siswa').length;
+                if(currentUser && currentUser.role === 'admin') renderAdminStudentTable();
+            });
+
+            // 3. Listen Schedules
+            onSnapshot(collection(db, "schedules"), (snapshot) => {
+                cloudData.schedules = snapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
+                renderSchedules();
+            });
+
+            // 4. Listen Room Absen
+            onSnapshot(doc(db, "app_data", "absen_room"), (docSnap) => {
+                if (docSnap.exists()) {
+                    cloudData.absenRoom = docSnap.data();
+                } else {
+                    setDoc(doc(db, "app_data", "absen_room"), cloudData.absenRoom);
+                }
+                updateAbsenceRoomUI();
+            });
+
+            // 5. Listen Absen Logs
+            onSnapshot(collection(db, "absen_logs"), (snapshot) => {
+                cloudData.absenLogs = snapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
+                if(currentUser && currentUser.role === 'admin') renderAttendanceLogs();
+            });
+
+            // 6. Listen Materi (Realtime Sync Admin & Siswa)
+            onSnapshot(collection(db, "materi"), (snapshot) => {
+                cloudData.materi = snapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
+                renderMateriList();
+            });
+
+            // 7. Listen Tasks
+            onSnapshot(collection(db, "tasks"), (snapshot) => {
+                cloudData.tasks = snapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
+                if(currentUser) {
+                    if(currentUser.role === 'siswa') renderStudentTaskList();
+                    if(currentUser.role === 'admin') renderAdminTaskList();
+                }
+            });
+
+            // 8. Listen Submissions
+            onSnapshot(collection(db, "submissions"), (snapshot) => {
+                cloudData.submissions = snapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
+                if(currentUser) {
+                    if(currentUser.role === 'siswa') {
+                        renderStudentTaskList();
+                        renderStudentGrades();
+                        checkStudentCertificateStatus();
+                    } else {
+                        renderAdminPendingSubmissions();
+                        renderAdminAllGrades();
+                    }
+                }
+            });
+        }
+
+        // UTILS
+        function getRealtimeString() {
+            const date = new Date();
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+            return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')} WIT`;
+        }
+
+        function formatDeadlineString(isoString) {
+            if (!isoString) return 'Tidak Ada';
+            const date = new Date(isoString);
+            if (isNaN(date.getTime())) return isoString;
+            return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+        }
+
+        function applySystemSettings() {
+            const settings = cloudData.settings;
+            document.querySelectorAll('.display-church-name').forEach(el => el.innerText = settings.churchName);
+            document.querySelectorAll('.display-church-sub').forEach(el => el.innerText = settings.churchSub);
+            document.querySelectorAll('.display-teacher-name').forEach(el => el.innerText = settings.teacherName);
+
+            const annText = document.getElementById('displayAnnouncement');
+            if(annText) annText.innerHTML = `<strong>Penting:</strong> ${settings.announcement}`;
+
+            const headerSub = document.getElementById('headerSubTitle');
+            if(headerSub) headerSub.innerText = settings.churchName;
+
+            const inputTeacher = document.getElementById('settingTeacherName');
+            if (inputTeacher) {
+                document.getElementById('settingTeacherName').value = settings.teacherName;
+                document.getElementById('settingTeacherRole').value = settings.teacherRole;
+                document.getElementById('settingChurchName').value = settings.churchName;
+                document.getElementById('settingChurchSub').value = settings.churchSub;
+                document.getElementById('settingAnnouncement').value = settings.announcement;
+            }
+        }
+
+        // LOGIN SYSTEM
+        window.handleLogin = function(e) {
+            e.preventDefault();
+            const userIn = document.getElementById('loginUser').value.trim();
+            const passIn = document.getElementById('loginPass').value.trim();
+
+            const foundUser = cloudData.users.find(u => u.username === userIn && u.password === passIn);
+
+            if (foundUser) {
+                currentUser = foundUser;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appScreen').style.display = 'flex';
+                applySystemSettings();
+                initUserSession();
+            } else {
+                alert('Username atau Password salah!');
+            }
+        };
+
+        window.handleLogout = function() {
+            currentUser = null;
+            document.getElementById('loginForm').reset();
+            document.getElementById('appScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+        };
+
+        function initUserSession() {
+            const roleBadge = document.getElementById('roleBadge');
+            const userName = document.getElementById('userName');
+            const userSub = document.getElementById('userSub');
+            const userAvatar = document.getElementById('userAvatar');
+            const headerTitle = document.getElementById('headerTitle');
+            const sidebar = document.getElementById('sidebar');
+
+            const siswaElements = document.querySelectorAll('.role-siswa-only');
+            const adminElements = document.querySelectorAll('.role-admin-only');
+
+            userName.innerText = currentUser.name;
+            userAvatar.innerText = currentUser.name.charAt(0);
+
+            updateAbsenceRoomUI();
+            renderSchedules();
+            renderMateriList();
+
+            if (currentUser.role === 'admin') {
+                sidebar.classList.add('admin-mode');
+                roleBadge.className = 'role-badge badge-admin';
+                roleBadge.innerText = 'Admin / Pengajar';
+                userSub.innerText = cloudData.settings.teacherRole;
+                headerTitle.innerText = 'Panel Pengajar & Admin';
+
+                siswaElements.forEach(el => el.style.display = 'none');
+                adminElements.forEach(el => el.style.display = 'block');
+                
+                renderAdminStudentTable();
+                renderAttendanceLogs();
+                renderAdminTaskList();
+                renderAdminPendingSubmissions();
+                renderAdminAllGrades();
+            } else {
+                sidebar.classList.remove('admin-mode');
+                roleBadge.className = 'role-badge badge-siswa';
+                roleBadge.innerText = 'Siswa';
+                userSub.innerText = currentUser.posPelayanan;
+                headerTitle.innerText = 'Portal Katekisasi Siswa';
+
+                siswaElements.forEach(el => el.style.display = 'block');
+                adminElements.forEach(el => el.style.display = 'none');
+
+                document.getElementById('absenStudentName').innerText = currentUser.name;
+                document.getElementById('absenStudentPos').innerText = currentUser.posPelayanan;
+
+                renderStudentTaskList();
+                renderStudentGrades();
+                checkStudentCertificateStatus();
+            }
+
+            showSection('dashboard', document.querySelector('.menu-item'));
+        }
+
+        // ==================== FITUR SERTIFIKAT OTOMATIS ====================
+        let calculatedAvgScore = 0;
+
+        function checkStudentCertificateStatus() {
+            if (!currentUser || currentUser.role !== 'siswa') return;
+
+            const mySubmissions = cloudData.submissions.filter(s => s.studentId === currentUser.id && s.grade !== null);
+            const statusContainer = document.getElementById('certStatusContainer');
+            const actionBox = document.getElementById('certActionBox');
+
+            if (mySubmissions.length === 0) {
+                calculatedAvgScore = 0;
+                statusContainer.innerHTML = `
+                    <i class="fa-solid fa-circle-exclamation" style="font-size: 2.5rem; color: var(--warning); margin-bottom: 8px;"></i>
+                    <h4 style="color: var(--text-dark);">Belum Ada Nilai Tersedia</h4>
+                    <p style="font-size: 0.85rem; color: #666;">Anda belum memiliki nilai evaluasi yang diberikan oleh Pengajar.</p>
+                `;
+                actionBox.style.display = 'none';
+                return;
+            }
+
+            let total = 0;
+            mySubmissions.forEach(s => total += parseFloat(s.grade || 0));
+            calculatedAvgScore = (total / mySubmissions.length).toFixed(1);
+
+            if (calculatedAvgScore >= 70) {
+                statusContainer.innerHTML = `
+                    <i class="fa-solid fa-circle-check" style="font-size: 2.5rem; color: var(--success); margin-bottom: 8px;"></i>
+                    <h4 style="color: var(--success);">SELAMAT! ANDA BERHAK MENERIMA SERTIFIKAT</h4>
+                    <p style="font-size: 0.9rem; color: #333; margin-top: 5px;">
+                        Nilai Rata-rata Evaluasi Anda: <strong style="font-size: 1.2rem; color: var(--primary-color);">${calculatedAvgScore}</strong> (Syarat Minimum: 70)
+                    </p>
+                `;
+                actionBox.style.display = 'block';
+            } else {
+                statusContainer.innerHTML = `
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; color: var(--danger); margin-bottom: 8px;"></i>
+                    <h4 style="color: var(--danger);">BELUM MEMENUHI SYARAT KELULUSAN</h4>
+                    <p style="font-size: 0.9rem; color: #333; margin-top: 5px;">
+                        Nilai Rata-rata Evaluasi Anda saat ini: <strong style="font-size: 1.2rem; color: var(--danger);">${calculatedAvgScore}</strong> (Syarat Minimum: 70).
+                    </p>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 4px;">Tingkatkan lagi hasil pengerjaan tugas/evaluasi Anda pada materi berikutnya.</p>
+                `;
+                actionBox.style.display = 'none';
+            }
+        }
+
+        window.generateAndPreviewCertificate = function() {
+            const canvas = document.getElementById('certCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // 1. Background
+            ctx.fillStyle = '#fdfbf7';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 2. Border Sertifikat Double Line
+            ctx.strokeStyle = '#1b365d';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
+
+            ctx.strokeStyle = '#d4af37';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(25, 25, canvas.width - 50, canvas.height - 50);
+
+            // 3. Header Nama Gereja
+            ctx.fillStyle = '#1b365d';
+            ctx.font = 'bold 22px Poppins, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(cloudData.settings.churchName.toUpperCase(), canvas.width / 2, 75);
+
+            ctx.fillStyle = '#d4af37';
+            ctx.font = 'bold 12px Poppins, sans-serif';
+            ctx.fillText(cloudData.settings.churchSub.toUpperCase(), canvas.width / 2, 95);
+
+            // Line Separator
+            ctx.beginPath();
+            ctx.moveTo(150, 110);
+            ctx.lineTo(canvas.width - 150, 110);
+            ctx.strokeStyle = '#d4af37';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // 4. Judul Sertifikat
+            ctx.fillStyle = '#1b365d';
+            ctx.font = 'bold 28px Georgia, serif';
+            ctx.fillText('SERTIFIKAT PENCAPAIAN', canvas.width / 2, 155);
+
+            ctx.fillStyle = '#555555';
+            ctx.font = 'italic 13px Poppins, sans-serif';
+            ctx.fillText('Diberikan secara resmi kepada peserta:', canvas.width / 2, 185);
+
+            // 5. Nama Siswa
+            ctx.fillStyle = '#1b365d';
+            ctx.font = 'bold 26px Poppins, sans-serif';
+            ctx.fillText(currentUser.name, canvas.width / 2, 230);
+
+            // Garis Bawah Nama
+            ctx.beginPath();
+            ctx.moveTo(250, 240);
+            ctx.lineTo(canvas.width - 250, 240);
+            ctx.strokeStyle = '#1b365d';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // 6. Keterangan Kelulusan
+            ctx.fillStyle = '#333333';
+            ctx.font = '13px Poppins, sans-serif';
+            ctx.fillText(`Telah menyelesaikan seluruh materi Pembelajaran Katekisasi dengan hasil Predikat Sangat Baik,`, canvas.width / 2, 275);
+            ctx.fillText(`memperoleh Nilai Rata-Rata Pencapaian Materi: ${calculatedAvgScore} / 100`, canvas.width / 2, 298);
+
+            // 7. Badge Nilai Rata-Rata (Lencana Bulat)
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, 360, 35, 0, 2 * Math.PI);
+            ctx.fillStyle = '#1b365d';
+            ctx.fill();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#d4af37';
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Poppins, sans-serif';
+            ctx.fillText(`${calculatedAvgScore}`, canvas.width / 2, 360);
+            ctx.font = 'bold 9px Poppins, sans-serif';
+            ctx.fillText('RATA-RATA', canvas.width / 2, 375);
+
+            // 8. Tanda Tangan & Tanggal
+            const today = new Date();
+            const dateStr = `Dobo, ${today.getDate()} ${['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][today.getMonth()]} ${today.getFullYear()}`;
+
+            ctx.fillStyle = '#555555';
+            ctx.font = '12px Poppins, sans-serif';
+            ctx.fillText(dateStr, canvas.width - 180, 430);
+
+            ctx.fillStyle = '#1b365d';
+            ctx.font = 'bold 13px Poppins, sans-serif';
+            ctx.fillText(cloudData.settings.teacherName, canvas.width - 180, 495);
+            ctx.font = '11px Poppins, sans-serif';
+            ctx.fillStyle = '#666666';
+            ctx.fillText(cloudData.settings.teacherRole, canvas.width - 180, 510);
+
+            // Garis Tanda Tangan
+            ctx.beginPath();
+            ctx.moveTo(canvas.width - 270, 480);
+            ctx.lineTo(canvas.width - 90, 480);
+            ctx.strokeStyle = '#aaaaaa';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Set Download Link Image
+            const imageURI = canvas.toDataURL("image/png");
+            document.getElementById('downloadCertBtn').href = imageURI;
+
+            // Buka Modal Preview
+            document.getElementById('certModal').style.display = 'flex';
+        };
+
+        window.closeCertModal = function() {
+            document.getElementById('certModal').style.display = 'none';
+        };
+
+        // ==================== FITUR KELOLA MATERI (UPLOAD CLOUD STORAGE & HAPUS) ====================
+        window.handleUploadMateri = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnUploadMateri');
+            const title = document.getElementById('materiTitle').value.trim();
+            const fileInput = document.getElementById('materiFile');
+            const urlInput = document.getElementById('materiUrl').value.trim();
+
+            let fileUrl = urlInput;
+
+            try {
+                if (fileInput.files.length > 0) {
+                    btn.disabled = true;
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah Ke Cloud Storage...`;
+
+                    const file = fileInput.files[0];
+                    const storageRef = ref(storage, `materi/${Date.now()}_${file.name}`);
+                    await uploadBytes(storageRef, file);
+                    fileUrl = await getDownloadURL(storageRef);
+                }
+
+                if (!fileUrl) {
+                    alert("Silahkan unggah file atau masukkan URL link materi!");
+                    return;
+                }
+
+                await addDoc(collection(db, "materi"), {
+                    title: title,
+                    teacher: cloudData.settings.teacherName,
+                    url: fileUrl,
+                    uploadedAt: getRealtimeString()
+                });
+
+                alert('Materi baru berhasil diunggah ke Firebase Storage!');
+                document.getElementById('materiTitle').value = '';
+                document.getElementById('materiFile').value = '';
+                document.getElementById('materiUrl').value = '';
+            } catch (error) {
+                console.error("Gagal mengunggah materi:", error);
+                alert("Terjadi kesalahan saat mengunggah ke Cloud Storage: " + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Publikasikan Materi`;
+            }
+        };
+
+        window.deleteMateri = async function(docId, title) {
+            if (confirm(`Apakah Anda yakin ingin menghapus materi "${title}"?`)) {
+                await deleteDoc(doc(db, "materi", docId));
+                alert(`Materi "${title}" berhasil dihapus.`);
+            }
+        };
+
+        function renderMateriList() {
+            const studentTbody = document.getElementById('studentMateriTable');
+            const adminTbody = document.getElementById('adminMateriTable');
+            
+            if (studentTbody) studentTbody.innerHTML = '';
+            if (adminTbody) adminTbody.innerHTML = '';
+
+            if (cloudData.materi.length === 0) {
+                const emptyRow = `<tr><td colspan="4" style="text-align:center; color:#888;">Belum ada materi pelajaran yang diunggah.</td></tr>`;
+                if (studentTbody) studentTbody.innerHTML = emptyRow;
+                if (adminTbody) adminTbody.innerHTML = emptyRow;
+                return;
+            }
+
+            cloudData.materi.forEach((m, index) => {
+                if (studentTbody) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><strong>${m.title}</strong></td>
+                        <td>${m.teacher}</td>
+                        <td><a href="${m.url}" target="_blank" class="btn btn-accent" download><i class="fa-solid fa-download"></i> Unduh / Buka</a></td>
+                    `;
+                    studentTbody.appendChild(tr);
+                }
+
+                if (adminTbody) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><strong>${m.title}</strong></td>
+                        <td>${m.teacher}</td>
+                        <td>
+                            <a href="${m.url}" target="_blank" class="btn btn-accent" style="padding: 4px 8px; font-size: 0.75rem;"><i class="fa-solid fa-eye"></i> Lihat</a>
+                            <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem; margin-left: 4px;" onclick="deleteMateri('${m.docId}', '${m.title}')">
+                                <i class="fa-solid fa-trash"></i> Hapus
+                            </button>
+                        </td>
+                    `;
+                    adminTbody.appendChild(tr);
+                }
+            });
+        }
+
+        // ==================== FITUR EVALUASI & UNGGAH TUGAS (CLOUD STORAGE VIDEO/FOTO) ====================
+        window.toggleMediaTypeInput = function(val) {
+            document.getElementById('mediaUrlGroup').style.display = (val === 'url') ? 'block' : 'none';
+            document.getElementById('mediaFileGroup').style.display = (val === 'file') ? 'block' : 'none';
+        };
+
+        window.handleStudentTaskSubmit = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitTask');
+            const taskId = document.getElementById('studentSelectedTaskId').value.toString();
+            const selectedTask = cloudData.tasks.find(t => t.id.toString() === taskId);
+
+            // CEK APAKAH SUDAH DIKIRIM (DOUBLE CHECK)
+            const alreadySubmitted = cloudData.submissions.some(s => s.studentId === currentUser.id && s.taskId.toString() === taskId);
+            if (alreadySubmitted) {
+                alert("Anda sudah mengirimkan jawaban untuk tugas ini. Jawaban telah dikunci!");
+                return;
+            }
+
+            // CEK DEADLINE
+            if (selectedTask && selectedTask.deadline) {
+                const now = new Date();
+                const deadlineDate = new Date(selectedTask.deadline);
+                if (now > deadlineDate) {
+                    alert("Maaf, waktu pengumpulan tugas ini telah berakhir/melewati deadline!");
+                    return;
+                }
+            }
+
+            const answer = document.getElementById('taskAnswerText').value.trim();
+            const mediaType = document.getElementById('taskMediaType').value;
+
+            let mediaData = { type: mediaType, url: '' };
+
+            try {
+                if (mediaType === 'url') {
+                    mediaData.url = document.getElementById('taskMediaUrl').value.trim();
+                } else if (mediaType === 'file') {
+                    const fileInput = document.getElementById('taskMediaFile');
+                    if (fileInput.files.length > 0) {
+                        btn.disabled = true;
+                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah Media ke Cloud Storage...`;
+
+                        const file = fileInput.files[0];
+                        const fileType = file.type.startsWith('image/') ? 'image' : (file.type.startsWith('video/') ? 'video' : 'file');
+                        
+                        const storageRef = ref(storage, `tugas_siswa/${currentUser.id}_${Date.now()}_${file.name}`);
+                        await uploadBytes(storageRef, file);
+                        const downloadURL = await getDownloadURL(storageRef);
+
+                        mediaData.url = downloadURL;
+                        mediaData.fileType = fileType;
+                    }
+                }
+
+                await addDoc(collection(db, "submissions"), {
+                    id: Date.now().toString(),
+                    studentId: currentUser.id,
+                    studentName: currentUser.name,
+                    taskId: selectedTask ? selectedTask.id : taskId,
+                    taskTitle: selectedTask ? selectedTask.title : 'Tugas Katekisasi',
+                    answer: answer,
+                    media: mediaData,
+                    submittedAt: getRealtimeString(),
+                    grade: null,
+                    feedback: ''
+                });
+
+                alert("Tugas berhasil dikirim ke Pengajar!");
+                document.getElementById('taskAnswerText').value = '';
+                document.getElementById('taskMediaUrl').value = '';
+                document.getElementById('taskMediaFile').value = '';
+                document.getElementById('studentSubmitFormBox').style.display = 'none';
+            } catch (error) {
+                console.error("Gagal mengirim tugas:", error);
+                alert("Terjadi kesalahan saat pengiriman jawaban: " + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Jawaban Sekarang`;
+            }
+        };
+
+        function renderMediaPreview(media) {
+            if (!media || media.type === 'none' || !media.url) return '-';
+            
+            if (media.type === 'url') {
+                return `<a href="${media.url}" target="_blank" class="btn btn-accent" style="padding:3px 8px; font-size:0.75rem;"><i class="fa-solid fa-up-right-from-square"></i> Buka Link Media/Video</a>`;
+            } else if (media.type === 'file') {
+                if (media.fileType === 'image') {
+                    return `<img src="${media.url}" class="media-preview"><br><a href="${media.url}" target="_blank" style="font-size:0.75rem;">Lihat Foto Full</a>`;
+                } else if (media.fileType === 'video') {
+                    return `<video src="${media.url}" controls class="media-preview"></video><br><a href="${media.url}" target="_blank" style="font-size:0.75rem;">Putar Video Full</a>`;
+                } else {
+                    return `<a href="${media.url}" target="_blank" class="btn btn-accent" style="padding:3px 8px; font-size:0.75rem;"><i class="fa-solid fa-file"></i> Unduh File</a>`;
+                }
+            }
+            return '-';
+        }
+
+        function renderStudentGrades() {
+            const mySubmissions = cloudData.submissions.filter(s => s.studentId === currentUser.id);
+            const tbody = document.getElementById('studentGradesTable');
+            tbody.innerHTML = '';
+
+            if (mySubmissions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#888;">Belum ada hasil nilai.</td></tr>`;
+                return;
+            }
+
+            mySubmissions.forEach(sub => {
+                const tr = document.createElement('tr');
+                const gradeBadge = sub.grade !== null 
+                    ? `<span style="font-weight:bold; color:var(--success); font-size:1.1rem;">${sub.grade}</span>`
+                    : `<span class="status-badge bg-pending">Menunggu Penilaian</span>`;
+
+                tr.innerHTML = `
+                    <td><strong>${sub.taskTitle}</strong></td>
+                    <td>${sub.submittedAt}</td>
+                    <td>${renderMediaPreview(sub.media)}</td>
+                    <td>${gradeBadge}</td>
+                    <td>${sub.feedback ? sub.feedback : '<span style="color:#aaa;">-</span>'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderAdminPendingSubmissions() {
+            const pendingSubmissions = cloudData.submissions.filter(s => s.grade === null);
+            const tbody = document.getElementById('adminPendingSubmissionTable');
+            tbody.innerHTML = '';
+
+            if (pendingSubmissions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#2e7d32; font-weight:bold; padding:20px;"><i class="fa-solid fa-circle-check"></i> Semuanya sudah dinilai! Tidak ada tugas pending.</td></tr>`;
+                return;
+            }
+
+            pendingSubmissions.forEach(sub => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${sub.studentName}</strong></td>
+                    <td>${sub.taskTitle}</td>
+                    <td>
+                        <div style="font-size:0.85rem; margin-bottom:5px;">${sub.answer || '<i>(Tanpa Teks)</i>'}</div>
+                        <div>${renderMediaPreview(sub.media)}</div>
+                    </td>
+                    <td><span style="font-size:0.75rem; color:#666;">${sub.submittedAt}</span></td>
+                    <td>
+                        <button class="btn btn-accent" style="padding:5px 10px; font-size:0.8rem;" onclick="openGradePrompt('${sub.docId}')">
+                            <i class="fa-solid fa-pen-to-square"></i> Beri Nilai
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // KELOLA SISWA (TAMBAH & HAPUS AKUN)
+        window.handleAddStudent = async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('addName').value.trim();
+            const email = document.getElementById('addEmail').value.trim();
+            const posPelayanan = document.getElementById('addPos').value.trim();
+            const username = document.getElementById('addUsername').value.trim();
+            const password = document.getElementById('addPassword').value.trim();
+
+            if (cloudData.users.some(u => u.username === username)) {
+                alert('Username sudah digunakan!');
+                return;
+            }
+
+            await addDoc(collection(db, "users"), {
+                id: Date.now().toString(),
+                role: 'siswa',
+                name: name,
+                username: username,
+                password: password,
+                email: email,
+                posPelayanan: posPelayanan
+            });
+
+            alert('Akun siswa berhasil ditambahkan!');
+            document.getElementById('addName').value = '';
+            document.getElementById('addEmail').value = '';
+            document.getElementById('addPos').value = '';
+            document.getElementById('addUsername').value = '';
+            document.getElementById('addPassword').value = '';
+        };
+
+        window.deleteStudent = async function(docId, studentName) {
+            if (confirm(`Apakah Anda yakin ingin menghapus data siswa ${studentName}?`)) {
+                await deleteDoc(doc(db, "users", docId));
+                alert(`Data siswa ${studentName} berhasil dihapus!`);
+            }
+        };
+
+        function renderAdminStudentTable() {
+            const students = cloudData.users.filter(u => u.role === 'siswa');
+            const tbody = document.getElementById('studentAccountTable');
+            tbody.innerHTML = '';
+
+            if (students.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">Belum ada siswa terdaftar.</td></tr>`;
+                return;
+            }
+
+            students.forEach(student => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${student.name}</strong></td>
+                    <td>${student.posPelayanan}</td>
+                    <td>${student.email}</td>
+                    <td><code>${student.username}</code></td>
+                    <td><code>${student.password}</code></td>
+                    <td>
+                        <button class="btn btn-warning" style="padding: 4px 8px; font-size: 0.75rem;" onclick="adminResetStudentPassword('${student.docId}')">
+                            <i class="fa-solid fa-rotate-left"></i> Reset
+                        </button>
+                        <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem; margin-left: 4px;" onclick="deleteStudent('${student.docId}', '${student.name}')">
+                            <i class="fa-solid fa-trash"></i> Hapus
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.adminResetStudentPassword = async function(docId) {
+            const newPassword = prompt("Masukkan Password Baru untuk Siswa ini:", "sion123");
+            if (newPassword !== null && newPassword.trim() !== "") {
+                await updateDoc(doc(db, "users", docId), { password: newPassword.trim() });
+                alert("Password siswa berhasil diperbarui!");
+            }
+        };
+
+        // KELOLA ABSENSI CLOUD
+        function updateAbsenceRoomUI() {
+            const roomInfo = cloudData.absenRoom;
+            const statText = document.getElementById('statAbsenStatus');
+            const sessionTitleInput = document.getElementById('sessionTitleInput');
+            const sessionStatusSelect = document.getElementById('sessionStatusSelect');
+            const activeTitleSiswa = document.getElementById('absenActiveSessionTitle');
+
+            if (sessionTitleInput) sessionTitleInput.value = roomInfo.sessionTitle;
+            if (sessionStatusSelect) sessionStatusSelect.value = roomInfo.status;
+            if (activeTitleSiswa) activeTitleSiswa.innerText = roomInfo.sessionTitle;
+
+            if (roomInfo.status === 'open') {
+                statText.innerText = "TERBUKA (" + roomInfo.sessionTitle + ")";
+                statText.style.color = "var(--success)";
+                document.getElementById('absenContainerOpen').style.display = 'block';
+                document.getElementById('absenContainerClosed').style.display = 'none';
+            } else {
+                statText.innerText = "DITUTUP";
+                statText.style.color = "var(--danger)";
+                document.getElementById('absenContainerOpen').style.display = 'none';
+                document.getElementById('absenContainerClosed').style.display = 'block';
+            }
+        }
+
+        window.toggleAbsenceRoom = async function(newStatus) {
+            const title = document.getElementById('sessionTitleInput').value.trim() || 'Pertemuan Minggu Ini';
+            await setDoc(doc(db, "app_data", "absen_room"), { status: newStatus, sessionTitle: title });
+            alert("Status Room Absensi berhasil diperbarui!");
+        };
+
+        window.handleStudentAbsenSubmit = async function(e) {
+            e.preventDefault();
+            const isChecked = document.getElementById('checkHadir').checked;
+            if(!isChecked) { alert("Silahkan centang kotak konfirmasi!"); return; }
+
+            const roomInfo = cloudData.absenRoom;
+            const alreadySubmitted = cloudData.absenLogs.some(l => l.studentName === currentUser.name && l.session === roomInfo.sessionTitle);
+            if(alreadySubmitted) { alert("Anda sudah melakukan presensi untuk " + roomInfo.sessionTitle + "!"); return; }
+
+            await addDoc(collection(db, "absen_logs"), {
+                studentName: currentUser.name,
+                posPelayanan: currentUser.posPelayanan,
+                session: roomInfo.sessionTitle,
+                time: getRealtimeString()
+            });
+
+            alert("Presensi Anda berhasil tersimpan!");
+            document.getElementById('checkHadir').checked = false;
+        };
+
+        function renderAttendanceLogs() {
+            const tbody = document.getElementById('attendanceRecordTable');
+            tbody.innerHTML = '';
+            if (cloudData.absenLogs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#888;">Belum ada siswa mengisi presensi.</td></tr>`;
+                return;
+            }
+            cloudData.absenLogs.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${log.studentName}</strong></td>
+                    <td>${log.posPelayanan}</td>
+                    <td>${log.session}</td>
+                    <td>${log.time}</td>
+                    <td><span class="status-badge bg-done"><i class="fa-solid fa-check"></i> Hadir</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // TUGAS & EVALUASI ADMIN (TERBITKAN & HAPUS TUGAS)
+        window.handleCreateTask = async function(e) {
+            e.preventDefault();
+            try {
+                const title = document.getElementById('taskTitle').value.trim();
+                const desc = document.getElementById('taskDesc').value.trim();
+                const deadline = document.getElementById('taskDeadline').value;
+
+                if (!title || !desc || !deadline) {
+                    alert("Mohon lengkapi judul, deskripsi, dan batas waktu tugas!");
+                    return;
+                }
+
+                await addDoc(collection(db, "tasks"), {
+                    id: Date.now().toString(),
+                    title: title,
+                    desc: desc,
+                    deadline: deadline,
+                    createdAt: getRealtimeString()
+                });
+
+                alert('Tugas minggu ini berhasil diterbitkan!');
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskDesc').value = '';
+                document.getElementById('taskDeadline').value = '';
+            } catch (error) {
+                console.error("Gagal menerbitkan tugas:", error);
+                alert("Terjadi kesalahan saat menerbitkan tugas. Pastikan koneksi internet terhubung.");
+            }
+        };
+
+        window.deleteTask = async function(docId, taskTitle) {
+            if (confirm(`Apakah Anda yakin ingin menghapus tugas "${taskTitle}"?`)) {
+                await deleteDoc(doc(db, "tasks", docId));
+                alert(`Tugas "${taskTitle}" berhasil dihapus.`);
+            }
+        };
+
+        function renderAdminTaskList() {
+            const tbody = document.getElementById('adminTaskListTable');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (cloudData.tasks.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#888;">Belum ada tugas yang diterbitkan.</td></tr>`;
+                return;
+            }
+
+            cloudData.tasks.forEach(t => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${t.title}</strong></td>
+                    <td>${t.desc}</td>
+                    <td><span class="status-badge bg-pending"><i class="fa-solid fa-clock"></i> ${formatDeadlineString(t.deadline)}</span></td>
+                    <td><small style="color:#666;">${t.createdAt || '-'}</small></td>
+                    <td>
+                        <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="deleteTask('${t.docId}', '${t.title}')">
+                            <i class="fa-solid fa-trash"></i> Hapus
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderStudentTaskList() {
+            const tbody = document.getElementById('studentTaskListTable');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (cloudData.tasks.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#888;">Belum ada tugas dari Pengajar.</td></tr>`;
+                return;
+            }
+
+            const now = new Date();
+
+            cloudData.tasks.forEach(t => {
+                const hasSubmitted = cloudData.submissions.some(s => s.studentId === currentUser.id && s.taskId.toString() === t.id.toString());
+                const isExpired = t.deadline ? (now > new Date(t.deadline)) : false;
+
+                const tr = document.createElement('tr');
+
+                let statusBadge = '';
+                let actionBtn = '';
+
+                if (hasSubmitted) {
+                    statusBadge = `<span class="status-badge bg-done"><i class="fa-solid fa-circle-check"></i> SUDAH DIKIRIM</span>`;
+                    actionBtn = `<button class="btn" style="background:#888; cursor:not-allowed;" disabled><i class="fa-solid fa-lock"></i> Terkunci</button>`;
+                } else if (isExpired) {
+                    statusBadge = `<span class="status-badge bg-danger"><i class="fa-solid fa-circle-xmark"></i> LEWAT BATAS WAKTU</span>`;
+                    actionBtn = `<button class="btn" style="background:#d9534f; cursor:not-allowed; opacity: 0.7;" disabled><i class="fa-solid fa-clock"></i> Ditutup</button>`;
+                } else {
+                    statusBadge = `<span class="status-badge bg-pending"><i class="fa-solid fa-circle-exclamation"></i> BELUM DIKERJAKAN</span>`;
+                    actionBtn = `<button class="btn btn-accent" onclick="openTaskForm('${t.id}')"><i class="fa-solid fa-pen"></i> Kerjakan Tugas</button>`;
+                }
+
+                tr.innerHTML = `
+                    <td><strong>${t.title}</strong></td>
+                    <td>${t.desc}</td>
+                    <td><small><strong>${formatDeadlineString(t.deadline)}</strong></small></td>
+                    <td>${statusBadge}</td>
+                    <td>${actionBtn}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.openTaskForm = function(taskId) {
+            const task = cloudData.tasks.find(t => t.id.toString() === taskId.toString());
+            if (task) {
+                document.getElementById('studentSelectedTaskId').value = task.id;
+                document.getElementById('studentTaskFormTitle').innerText = task.title;
+                document.getElementById('studentTaskFormDesc').innerText = `${task.desc} (Batas Waktu: ${formatDeadlineString(task.deadline)})`;
+                document.getElementById('studentSubmitFormBox').style.display = 'block';
+                document.getElementById('studentSubmitFormBox').scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
+        function renderAdminAllGrades() {
+            const gradedSubmissions = cloudData.submissions.filter(s => s.grade !== null);
+            const tbody = document.getElementById('adminAllGradesTable');
+            tbody.innerHTML = '';
+
+            if (gradedSubmissions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">Belum ada rekap nilai tugas.</td></tr>`;
+                return;
+            }
+
+            gradedSubmissions.forEach(sub => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${sub.studentName}</strong></td>
+                    <td>${sub.taskTitle}</td>
+                    <td><span style="font-size:0.8rem; color:#666;">${sub.submittedAt}</span></td>
+                    <td><span style="font-weight:bold; color:var(--success); font-size:1.1rem;">${sub.grade}</span></td>
+                    <td>${sub.feedback || '-'}</td>
+                    <td>
+                        <button class="btn btn-warning" style="padding:4px 8px; font-size:0.75rem;" onclick="openGradePrompt('${sub.docId}')">
+                            <i class="fa-solid fa-file-pen"></i> Edit Nilai
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.openGradePrompt = async function(subDocId) {
+            const sub = cloudData.submissions.find(s => s.docId === subDocId);
+            if (sub) {
+                const gradeInput = prompt("Masukkan Nilai Evaluasi (0 - 100):", sub.grade !== null ? sub.grade : "85");
+                if (gradeInput === null) return;
+
+                const feedbackInput = prompt("Masukkan Catatan / Feedback untuk Siswa:", sub.feedback || "Sangat baik, tingkatkan lagi!");
+                if (feedbackInput === null) return;
+
+                await updateDoc(doc(db, "submissions", subDocId), {
+                    grade: gradeInput.trim(),
+                    feedback: feedbackInput.trim()
+                });
+
+                alert("Nilai dan Catatan berhasil disimpan!");
+            }
+        };
+
+        // KELOLA JADWAL CLOUD
+        window.handleAddSchedule = async function(e) {
+            e.preventDefault();
+            await addDoc(collection(db, "schedules"), {
+                id: Date.now().toString(),
+                date: document.getElementById('schDate').value.trim(),
+                time: document.getElementById('schTime').value.trim(),
+                title: document.getElementById('schTitle').value.trim(),
+                location: document.getElementById('schLocation').value.trim()
+            });
+
+            alert("Jadwal kegiatan baru ditambahkan!");
+            document.getElementById('schDate').value = '';
+            document.getElementById('schTime').value = '';
+            document.getElementById('schTitle').value = '';
+            document.getElementById('schLocation').value = '';
+        };
+
+        window.deleteSchedule = async function(docId) {
+            if (confirm("Apakah Anda yakin ingin menghapus agenda ini?")) {
+                await deleteDoc(doc(db, "schedules", docId));
+            }
+        };
+
+        function renderSchedules() {
+            const tbody = document.getElementById('scheduleTableBody');
+            tbody.innerHTML = '';
+            if (cloudData.schedules.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#888;">Belum ada jadwal kegiatan.</td></tr>`;
+                return;
+            }
+
+            cloudData.schedules.forEach(s => {
+                const tr = document.createElement('tr');
+                const adminAction = currentUser && currentUser.role === 'admin' 
+                    ? `<button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteSchedule('${s.docId}')"><i class="fa-solid fa-trash"></i> Hapus</button>`
+                    : '';
+
+                tr.innerHTML = `
+                    <td><strong>${s.date}</strong></td>
+                    <td>${s.time}</td>
+                    <td>${s.title}</td>
+                    <td>${s.location}</td>
+                    ${currentUser && currentUser.role === 'admin' ? `<td>${adminAction}</td>` : ''}
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // PENGATURAN APP
+        window.handleSaveSettings = async function(e) {
+            e.preventDefault();
+            const newSettings = {
+                teacherName: document.getElementById('settingTeacherName').value.trim(),
+                teacherRole: document.getElementById('settingTeacherRole').value.trim(),
+                churchName: document.getElementById('settingChurchName').value.trim(),
+                churchSub: document.getElementById('settingChurchSub').value.trim(),
+                announcement: document.getElementById('settingAnnouncement').value.trim()
+            };
+
+            await setDoc(doc(db, "app_data", "settings"), newSettings);
+            alert("Pengaturan Sistem berhasil disimpan!");
+        };
+
+        // GANTI PASSWORD & RESET
+        window.handleChangePassword = async function(e) {
+            e.preventDefault();
+            const oldPass = document.getElementById('oldPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmNewPassword').value;
+
+            if (oldPass !== currentUser.password) { alert('Password lama Anda salah!'); return; }
+            if (newPass !== confirmPass) { alert('Konfirmasi password tidak cocok!'); return; }
+
+            await updateDoc(doc(db, "users", currentUser.docId), { password: newPass });
+            currentUser.password = newPass;
+            alert('Password berhasil diperbarui!');
+            document.getElementById('changePasswordForm').reset();
+        };
+
+        window.openResetModal = function() { document.getElementById('resetModal').style.display = 'flex'; };
+        window.closeResetModal = function() { document.getElementById('resetModal').style.display = 'none'; };
+
+        window.handleResetViaEmail = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('resetEmailInput').value.trim();
+            const foundUser = cloudData.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+            if (foundUser) {
+                alert("Tautan reset password telah dikirim ke email " + email);
+                closeResetModal();
+            } else {
+                alert("Email tidak terdaftar di sistem!");
+            }
+        };
+
+        // NAVIGASI VIEW
+        window.showSection = function(sectionId, element) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => item.classList.remove('active'));
+            if(element) element.classList.add('active');
+        };
+
+        // INITIALIZE CLOUD ON LOAD
+        window.addEventListener("DOMContentLoaded", function() {
+            initCloudListeners();
+        });
+    </script>
+</body>
+</html>
